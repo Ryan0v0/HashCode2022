@@ -7,7 +7,7 @@ skill_search = {}
 # Projects
 projects = []
 
-with open('b_better_start_small.in.txt', 'r') as f:
+with open('d_dense_schedule.in.txt', 'r') as f:
     c, p = map(int, f.readline().split())
     for _ in range(c):
         name, skill_num = f.readline().split()
@@ -93,7 +93,9 @@ while project_list:
     project_list = sorted(project_list, key=lambda x: x['score'] / x['duration'])
     for project in project_list:
         if time + project['duration'] > project['deadline']:
-            project_list.remove(project)
+            project['score'] -= 1
+            if project['score'] == 0:
+                project_list.remove(project)
             continue
         project['members'] = []
         update = []
@@ -127,7 +129,9 @@ while project_list:
     else:
         break
 
-with open('b_out.txt', 'w') as f:
+print(completed_projects)
+
+with open('d_out.txt', 'w') as f:
     f.write(f'{len(completed_projects)}\n')
     for project in completed_projects:
         f.write(f"{project[0]}\n{' '.join(project[1])}\n")
