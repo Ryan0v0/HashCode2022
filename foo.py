@@ -1,10 +1,10 @@
-from sympy import O
-
-
 dev_skills = {}
 projects = {}
 
-with open('input_data/b_better_start_small.in.txt', 'r') as in_file:
+inputs = ['a_an_example.in.txt', 'b_better_start_small.in.txt', 'c_collaboration.in.txt',
+  'd_dense_schedule.in.txt', 'e_exceptional_skills.in.txt']
+
+with open(f'input_data/{inputs[4]}', 'r') as in_file:
   line = in_file.readline()
   C = int(line.split()[0])
   P = int(line.split()[1])
@@ -14,12 +14,15 @@ with open('input_data/b_better_start_small.in.txt', 'r') as in_file:
     line = in_file.readline()
     name = line.split()[0]    
     num_skills = int(line.split()[1])
-    dev_skills[name] = []
+
+    lang_level = {}
     for j in range(num_skills):
       line = in_file.readline()
       lang = line.split()[0]
       level = int(line.split()[1])
-      dev_skills[name].append((lang, level))
+      lang_level[lang] = level
+
+    dev_skills[name] = lang_level
 
 
   for i in range(P):
@@ -34,22 +37,22 @@ with open('input_data/b_better_start_small.in.txt', 'r') as in_file:
   # print(projects)
 
 
-
 with open('out.txt', 'w') as out_file:
   ans = []  
-  for name in projects.keys():
-    info = projects[name]
+  proj_l = sorted(projects.items(), key = lambda t: t[1]['best_before'], reverse=False)
+  # print(proj_l)
+
+  for name, info in proj_l:
     assignee = []
     used = set()
     for (lang, lvl) in info['roles']:
       found = False
       for dev_name, skills in dev_skills.items():
-        for (dev_lang, dev_lvl) in skills:
-          if dev_lang == lang and dev_lvl >= lvl and not dev_name in used:
-            assignee.append(dev_name)
-            used.add(dev_name)
-            found = True
-            break
+        if lang in skills and skills[lang] >= lvl and not dev_name in used:
+          assignee.append(dev_name)
+          used.add(dev_name)
+          found = True
+          break
         if found:
           break
 
