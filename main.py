@@ -7,7 +7,7 @@ skill_search = {}
 # Projects
 projects = []
 
-with open('d_dense_schedule.in.txt', 'r') as f:
+with open('f_find_great_mentors.in.txt', 'r') as f:
     c, p = map(int, f.readline().split())
     for _ in range(c):
         name, skill_num = f.readline().split()
@@ -52,7 +52,7 @@ def match_skill(skill_name, skill_req, has_mentor):
     skill_lvl = skill_req - (1 if has_mentor else 0)
     while skill_lvl <= max_lvl:
         if skill_lvl in skill_dict:
-            for contributor in skill_dict[skill_lvl]:
+            for contributor in sorted(skill_dict[skill_lvl], key=lambda x: sum(x['skills'].values())/len(x['skills'])):
                 if contributor['available']:
                     if skill_lvl <= skill_req:
                         return contributor, True
@@ -90,7 +90,7 @@ while project_list:
         for update in updates[time]:
             execute(update)
         del(updates[time])
-    project_list = sorted(project_list, key=lambda x: x['score'] / x['duration'])
+    project_list = sorted(project_list, key=lambda x: x['score'] / x['duration'], reverse=True)
     for project in project_list:
         if time + project['duration'] > project['deadline']:
             project['score'] -= 1
@@ -131,7 +131,7 @@ while project_list:
 
 print(completed_projects)
 
-with open('d_out.txt', 'w') as f:
+with open('f_out.txt', 'w') as f:
     f.write(f'{len(completed_projects)}\n')
     for project in completed_projects:
         f.write(f"{project[0]}\n{' '.join(project[1])}\n")
