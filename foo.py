@@ -4,7 +4,7 @@ projects = {}
 inputs = ['a_an_example.in.txt', 'b_better_start_small.in.txt', 'c_collaboration.in.txt',
   'd_dense_schedule.in.txt', 'e_exceptional_skills.in.txt']
 
-with open(f'input_data/{inputs[4]}', 'r') as in_file:
+with open(f'input_data/{inputs[3]}', 'r') as in_file:
   line = in_file.readline()
   C = int(line.split()[0])
   P = int(line.split()[1])
@@ -39,7 +39,7 @@ with open(f'input_data/{inputs[4]}', 'r') as in_file:
 
 with open('out.txt', 'w') as out_file:
   ans = []  
-  proj_l = sorted(projects.items(), key = lambda t: t[1]['best_before'], reverse=False)
+  proj_l = sorted(projects.items(), key = lambda t: t[1]['best_before'] + t[1]['score'] - t[1]['days'], reverse=False)
   # print(proj_l)
 
   for name, info in proj_l:
